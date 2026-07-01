@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gewinnspiel – Fussballschule Renchtal</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: "Segoe UI", Arial, sans-serif;
+    background: linear-gradient(135deg, #1b5e20, #2e7d32);
+    min-height: 100vh;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    color: #222;
+  }
+
+  .card {
+    background: #fff;
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    padding: 40px;
+    max-width: 480px;
+    width: 100%;
+  }
+
+  h1 {
+    text-align: center;
+    color: #1b5e20;
+    margin-top: 0;
+    margin-bottom: 8px;
+    font-size: 1.6em;
+  }
+
+  p.intro {
+    text-align: center;
+    color: #555;
+    margin-bottom: 28px;
+  }
+
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+    color: #1b5e20;
+  }
+
+  input[type="text"],
+  input[type="email"] {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1em;
+  }
+
+  input:focus {
+    outline: none;
+    border-color: #2e7d32;
+    box-shadow: 0 0 0 2px rgba(46, 125, 50, 0.2);
+  }
+
+  button {
+    width: 100%;
+    padding: 14px;
+    background: #2e7d32;
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background 0.2s ease;
+  }
+
+  button:hover {
+    background: #1b5e20;
+  }
+
+  button:disabled {
+    background: #9e9e9e;
+    cursor: not-allowed;
+  }
+
+  #result {
+    margin-top: 20px;
+    text-align: center;
+    font-weight: bold;
+    border-radius: 8px;
+    padding: 0;
+  }
+
+  #result.success {
+    color: #1b5e20;
+    background: #e8f5e9;
+    padding: 14px;
+  }
+
+  #result.error {
+    color: #b71c1c;
+    background: #ffebee;
+    padding: 14px;
+  }
+
+  footer {
+    margin-top: 24px;
+    text-align: center;
+    color: #e8f5e9;
+    font-size: 0.85em;
+    max-width: 480px;
+  }
+</style>
+</head>
+<body>
+
+  <div class="card">
+    <h1>⚽ Gewinnspiel der Fussballschule Renchtal</h1>
+    <p class="intro">Beantworte die Frage und nimm an unserem Gewinnspiel teil!</p>
+
+    <form id="gewinnspielForm">
+      <input type="hidden" name="access_key" value="a92add17-c35f-4efa-8a17-ac4742223df3">
+      <input type="hidden" name="subject" value="Neue Teilnahme am Fussballschule Renchtal Gewinnspiel">
+
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" required>
+
+      <label for="email">E-Mail-Adresse</label>
+      <input type="email" id="email" name="email" required>
+
+      <label for="antwort">Wie viele Fußbälle sind in dem Smart?</label>
+      <input type="text" id="antwort" name="antwort" required>
+
+      <button type="submit" id="submitBtn">Jetzt teilnehmen!</button>
+    </form>
+
+    <div id="result"></div>
+  </div>
+
+  <footer>
+    © Fussballschule Renchtal – Jede Person darf nur einmal teilnehmen.
+  </footer>
+
+  <script>
+    const form = document.getElementById('gewinnspielForm');
+    const result = document.getElementById('result');
+    const submitBtn = document.getElementById('submitBtn');
+
+    form.addEventListener('submit', function (event) {
+      event.preventDefault();
+
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Wird gesendet...';
+      result.className = '';
+      result.textContent = '';
+
+      const formData = new FormData(form);
+
+      fetch('https://api.web3forms.com/submit', {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: formData
+      })
+        .then((response) => response.json())
+        .then((data) => {
+          if (data.success) {
+            result.className = 'success';
+            result.textContent = 'Vielen Dank für deine Teilnahme! Wir haben deine Antwort erhalten und wünschen dir viel Glück!';
+            form.reset();
+          } else {
+            result.className = 'error';
+            result.textContent = 'Es gab ein Problem beim Absenden. Bitte versuche es später erneut.';
+          }
+        })
+        .catch(() => {
+          result.className = 'error';
+          result.textContent = 'Es gab ein Problem beim Absenden. Bitte überprüfe deine Internetverbindung und versuche es erneut.';
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Jetzt teilnehmen!';
+        });
+    });
+  </script>
+
+</body>
+</html>
