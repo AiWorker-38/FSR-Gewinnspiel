@@ -74,7 +74,8 @@
   }
 
   input[type="text"],
-  input[type="email"] {
+  input[type="email"],
+  input[type="number"] {
     width: 100%;
     padding: 12px;
     margin-bottom: 20px;
@@ -177,6 +178,12 @@
 
       <label for="name">Name</label>
       <input type="text" id="name" name="name" required>
+
+      <label for="alter">Alter</label>
+      <input type="number" id="alter" name="alter" min="0" required>
+
+      <label for="verein">Verein</label>
+      <input type="text" id="verein" name="verein">
 
       <label for="email">E-Mail-Adresse</label>
       <input type="email" id="email" name="email" required>
